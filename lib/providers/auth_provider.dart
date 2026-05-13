@@ -40,15 +40,26 @@ class AuthProvider with ChangeNotifier {
         'password': password,
       });
       final data = ApiService.extractData(res);
-      final token = data['token'] ?? data['accessToken'];
-      if (token == null) {
-        _error = 'Invalid response from server';
+      final tokenData = data['token'];
+      String? accessToken;
+      String? refreshToken;
+
+      if (tokenData is Map) {
+        accessToken = tokenData['accessToken'];
+        refreshToken = tokenData['refreshToken'];
+      } else {
+        accessToken = data['accessToken'] ?? data['token'];
+        refreshToken = data['refreshToken'];
+      }
+
+      if (accessToken == null) {
+        _error = 'Invalid response from server: Missing access token';
         _setLoading(false);
         return false;
       }
-      await _storage.write(key: StorageKeys.token, value: token);
-      if (data['refreshToken'] != null) {
-        await _storage.write(key: StorageKeys.refreshToken, value: data['refreshToken']);
+      await _storage.write(key: StorageKeys.token, value: accessToken);
+      if (refreshToken != null) {
+        await _storage.write(key: StorageKeys.refreshToken, value: refreshToken);
       }
       await _fetchCurrentUser();
       await _fetchEmployeeProfile();
