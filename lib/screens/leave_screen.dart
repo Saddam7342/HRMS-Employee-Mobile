@@ -122,59 +122,91 @@ class _LeaveScreenState extends State<LeaveScreen> {
   Widget _buildLeaveItem(BuildContext context, LeaveRequest leave) {
     final dateFmt = DateFormat('MMM dd, yyyy');
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        title: Row(
-          children: [
-            Text(leave.leaveType, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const Spacer(),
-            _buildStatusChip(leave.status),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.calendar_month_outlined, size: 14, color: AppTheme.textMuted),
-                const SizedBox(width: 4),
-                Text(
-                  '${dateFmt.format(leave.startDate)} - ${dateFmt.format(leave.endDate)}',
-                  style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      leave.leaveType,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppTheme.textPrimary),
+                    ),
+                    _buildStatusChip(leave.status),
+                  ],
                 ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    _buildInfoBadge(Icons.calendar_month_outlined, dateFmt.format(leave.startDate)),
+                    const SizedBox(width: 12),
+                    const Icon(Icons.arrow_forward_rounded, size: 14, color: AppTheme.textMuted),
+                    const SizedBox(width: 12),
+                    _buildInfoBadge(Icons.calendar_month_outlined, dateFmt.format(leave.endDate)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Icon(Icons.timer_outlined, size: 16, color: AppTheme.primary.withValues(alpha: 0.7)),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${leave.days.toInt()} Days Request',
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                if (leave.reason != null && leave.reason!.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Divider(height: 1, color: Color(0xFFF3F4F6)),
+                  ),
+                  Text(
+                    leave.reason!,
+                    style: const TextStyle(color: AppTheme.textMuted, fontSize: 12, height: 1.4),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.timer_outlined, size: 14, color: AppTheme.textMuted),
-                const SizedBox(width: 4),
-                Text(
-                  '${leave.days.toInt()} Days',
-                  style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
-                ),
-              ],
-            ),
-            if (leave.reason != null && leave.reason!.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                leave.reason!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: AppTheme.textMuted, fontSize: 12, fontStyle: FontStyle.italic),
-              ),
-            ],
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoBadge(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: AppTheme.textMuted),
+          const SizedBox(width: 6),
+          Text(text, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12, fontWeight: FontWeight.w500)),
+        ],
       ),
     );
   }
@@ -202,7 +234,15 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
   void _showApplyLeaveModal(BuildContext context) {
     final leaveProvider = context.read<LeaveProvider>();
-    String selectedTypeId = leaveProvider.balances.isNotEmpty ? leaveProvider.balances.first.leaveTypeId : '';
+    
+    if (leaveProvider.balances.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No leave types available. Please contact HR.')),
+      );
+      return;
+    }
+
+    String selectedTypeId = leaveProvider.balances.first.leaveTypeId;
     DateTime startDate = DateTime.now();
     DateTime endDate = DateTime.now().add(const Duration(days: 1));
     final reasonController = TextEditingController();
@@ -213,113 +253,137 @@ class _LeaveScreenState extends State<LeaveScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(32), topRight: Radius.circular(32)),
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 12, 24, 30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            left: 24,
+            right: 24,
+            top: 12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.beach_access_rounded, color: AppTheme.primary),
+                  ),
+                  const SizedBox(width: 16),
+                  const Text('Apply for Leave', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 30),
+              
+              const Text('LEAVE TYPE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.textMuted, letterSpacing: 1)),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selectedTypeId,
+                    isExpanded: true,
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.textMuted),
+                    items: leaveProvider.balances.map((b) => DropdownMenuItem(
+                      value: b.leaveTypeId, 
+                      child: Row(
+                        children: [
+                          Text(b.leaveType, style: const TextStyle(fontWeight: FontWeight.w600)),
+                          const Spacer(),
+                          Text('${b.remaining.toInt()} left', style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
+                        ],
+                      )
+                    )).toList(),
+                    onChanged: (val) => setModalState(() => selectedTypeId = val!),
                   ),
                 ),
-                const SizedBox(height: 24),
-                const Text('Apply for Leave', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 24),
-                const Text('Leave Type', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: selectedTypeId,
-                  decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
-                  items: leaveProvider.balances.map((b) => DropdownMenuItem(value: b.leaveTypeId, child: Text(b.leaveType))).toList(),
-                  onChanged: (val) => setModalState(() => selectedTypeId = val!),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Start Date', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
-                          const SizedBox(height: 8),
-                          InkWell(
-                            onTap: () async {
-                              final date = await showDatePicker(
-                                context: context,
-                                initialDate: startDate,
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime.now().add(const Duration(days: 365)),
-                              );
-                              if (date != null) setModalState(() => startDate = date);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(DateFormat('MMM dd, yyyy').format(startDate)),
-                            ),
-                          ),
-                        ],
-                      ),
+              ),
+              
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDateInput(
+                      label: 'START DATE',
+                      date: startDate,
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: startDate,
+                          firstDate: DateTime.now().subtract(const Duration(days: 30)),
+                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                        );
+                        if (date != null) setModalState(() => startDate = date);
+                      },
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('End Date', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
-                          const SizedBox(height: 8),
-                          InkWell(
-                            onTap: () async {
-                              final date = await showDatePicker(
-                                context: context,
-                                initialDate: endDate,
-                                firstDate: startDate,
-                                lastDate: DateTime.now().add(const Duration(days: 365)),
-                              );
-                              if (date != null) setModalState(() => endDate = date);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(DateFormat('MMM dd, yyyy').format(endDate)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text('Reason', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: reasonController,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    hintText: 'Describe why you are taking this leave...',
-                    contentPadding: EdgeInsets.all(16),
                   ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildDateInput(
+                      label: 'END DATE',
+                      date: endDate,
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: endDate,
+                          firstDate: startDate,
+                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                        );
+                        if (date != null) setModalState(() => endDate = date);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 24),
+              const Text('REASON', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.textMuted, letterSpacing: 1)),
+              const SizedBox(height: 8),
+              TextField(
+                controller: reasonController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Briefly explain your reason...',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.grey.shade200)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.grey.shade200)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: AppTheme.primary, width: 1.5)),
                 ),
-                const SizedBox(height: 32),
-                ElevatedButton(
+              ),
+              
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
                   onPressed: leaveProvider.isLoading
                       ? null
                       : () async {
+                          if (selectedTypeId.isEmpty) return;
+                          
                           final error = await leaveProvider.applyLeave(
                             leaveTypeId: selectedTypeId,
                             startDate: startDate,
@@ -330,26 +394,69 @@ class _LeaveScreenState extends State<LeaveScreen> {
                             if (context.mounted) Navigator.pop(context);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Leave request submitted successfully'), backgroundColor: AppTheme.accent),
+                                const SnackBar(
+                                  content: Text('Application submitted successfully!'), 
+                                  backgroundColor: AppTheme.accent,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
                               );
                             }
                           } else {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(error), backgroundColor: AppTheme.danger),
+                                SnackBar(
+                                  content: Text(error), 
+                                  backgroundColor: AppTheme.danger,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
                               );
                             }
                           }
                         },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
+                  ),
                   child: leaveProvider.isLoading
-                      ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                      : const Text('Submit Application'),
+                      ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                      : const Text('Submit Application', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateInput({required String label, required DateTime date, required VoidCallback onTap}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.textMuted, letterSpacing: 1)),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.calendar_today_rounded, size: 16, color: AppTheme.primary),
+                const SizedBox(width: 10),
+                Text(DateFormat('MMM dd, yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.w600)),
               ],
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
