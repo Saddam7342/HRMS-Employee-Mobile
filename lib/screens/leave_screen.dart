@@ -202,7 +202,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
   void _showApplyLeaveModal(BuildContext context) {
     final leaveProvider = context.read<LeaveProvider>();
-    String selectedType = leaveProvider.balances.isNotEmpty ? leaveProvider.balances.first.leaveType : 'Annual Leave';
+    String selectedTypeId = leaveProvider.balances.isNotEmpty ? leaveProvider.balances.first.leaveTypeId : '';
     DateTime startDate = DateTime.now();
     DateTime endDate = DateTime.now().add(const Duration(days: 1));
     final reasonController = TextEditingController();
@@ -237,10 +237,10 @@ class _LeaveScreenState extends State<LeaveScreen> {
                 const Text('Leave Type', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  initialValue: selectedType,
+                  initialValue: selectedTypeId,
                   decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
-                  items: leaveProvider.balances.map((b) => DropdownMenuItem(value: b.leaveType, child: Text(b.leaveType))).toList(),
-                  onChanged: (val) => setModalState(() => selectedType = val!),
+                  items: leaveProvider.balances.map((b) => DropdownMenuItem(value: b.leaveTypeId, child: Text(b.leaveType))).toList(),
+                  onChanged: (val) => setModalState(() => selectedTypeId = val!),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -321,7 +321,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                       ? null
                       : () async {
                           final error = await leaveProvider.applyLeave(
-                            leaveType: selectedType,
+                            leaveTypeId: selectedTypeId,
                             startDate: startDate,
                             endDate: endDate,
                             reason: reasonController.text,

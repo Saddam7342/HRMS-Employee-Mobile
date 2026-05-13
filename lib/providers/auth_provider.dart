@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     _error = null;
     try {
       final res = await _api.post(ApiConstants.login, data: {
-        'email': email.trim(),
+        'emailOrUsername': email.trim(),
         'password': password,
       });
       final data = ApiService.extractData(res);

@@ -45,7 +45,7 @@ class LeaveProvider with ChangeNotifier {
   }
 
   Future<String?> applyLeave({
-    required String leaveType,
+    required String leaveTypeId,
     required DateTime startDate,
     required DateTime endDate,
     String? reason,
@@ -55,7 +55,7 @@ class LeaveProvider with ChangeNotifier {
     notifyListeners();
     try {
       await _api.post(ApiConstants.applyLeave, data: {
-        'leaveType': leaveType,
+        'leaveTypeId': leaveTypeId,
         'startDate': startDate.toIso8601String(),
         'endDate': endDate.toIso8601String(),
         'reason': reason,

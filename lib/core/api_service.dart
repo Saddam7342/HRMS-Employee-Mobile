@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'constants.dart';
@@ -28,10 +29,24 @@ class ApiService {
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
+          // Log request
+          debugPrint('--> ${options.method} ${options.uri}');
+          debugPrint('Headers: ${options.headers}');
+          debugPrint('Payload: ${options.data}');
           return handler.next(options);
         },
-        onResponse: (response, handler) => handler.next(response),
-        onError: (DioException e, handler) => handler.next(e),
+        onResponse: (response, handler) {
+          // Log response
+          debugPrint('<-- ${response.statusCode} ${response.requestOptions.uri}');
+          debugPrint('Response: ${response.data}');
+          return handler.next(response);
+        },
+        onError: (DioException e, handler) {
+          // Log error
+          debugPrint('<-- ERROR ${e.response?.statusCode} ${e.requestOptions.uri}');
+          debugPrint('Error: ${e.response?.data ?? e.message}');
+          return handler.next(e);
+        },
       ),
     );
   }
