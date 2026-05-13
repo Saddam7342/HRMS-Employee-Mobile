@@ -334,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
             'Quick Actions',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
           ),
-          const SizedBox(height: 16),
+
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

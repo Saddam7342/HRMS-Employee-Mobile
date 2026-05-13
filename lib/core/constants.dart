@@ -19,6 +19,7 @@ class ApiConstants {
   static const String attendanceSummary = '/attendance/summary';
 
   // Leaves
+  static const String leaveTypes = '/leaves/types';
   static const String myLeaves = '/leaves/my';
   static const String leaveBalances = '/leaves/balances';
   static const String applyLeave = '/leaves';

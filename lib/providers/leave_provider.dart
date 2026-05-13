@@ -56,8 +56,8 @@ class LeaveProvider with ChangeNotifier {
     try {
       await _api.post(ApiConstants.applyLeave, data: {
         'leaveTypeId': leaveTypeId,
-        'startDate': startDate.toUtc().toIso8601String(),
-        'endDate': endDate.toUtc().toIso8601String(),
+        'startDate': _toApiDateOnly(startDate),
+        'endDate': _toApiDateOnly(endDate),
         'reason': reason,
       });
       await fetchMyLeaves();
@@ -72,6 +72,10 @@ class LeaveProvider with ChangeNotifier {
       return _error;
     }
   }
+
+  /// Calendar date as yyyy-MM-dd for the API (avoids timezone shifting the day).
+  static String _toApiDateOnly(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
   Future<String?> cancelLeave(String id) async {
     try {
