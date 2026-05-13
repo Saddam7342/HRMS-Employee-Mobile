@@ -43,11 +43,7 @@ class AttendanceProvider with ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final res = await _api.post(ApiConstants.checkIn, data: {'notes': notes ?? ''});
-      final data = ApiService.extractData(res);
-      if (data != null) {
-        _today = AttendanceRecord.fromJson(data);
-      }
+      await _api.post(ApiConstants.checkIn, data: {'notes': notes ?? ''});
       await fetchToday();
       _isLoading = false;
       notifyListeners();

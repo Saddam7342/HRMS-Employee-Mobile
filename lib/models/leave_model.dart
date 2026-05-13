@@ -25,10 +25,20 @@ class LeaveRequest {
         startDate: DateTime.tryParse(j['startDate'] ?? '') ?? DateTime.now(),
         endDate: DateTime.tryParse(j['endDate'] ?? '') ?? DateTime.now(),
         days: ((j['totalDays'] ?? j['days'] ?? 1) as num).toDouble(),
-        status: j['status'] ?? 'Pending',
+        status: j['status'] is int ? _statusFromInt(j['status']) : (j['status'] ?? 'Pending'),
         reason: j['reason'],
         appliedAt: j['appliedAt'] != null ? DateTime.tryParse(j['appliedAt']) : null,
       );
+
+  static String _statusFromInt(int s) {
+    switch (s) {
+      case 1: return 'Pending';
+      case 2: return 'Approved';
+      case 3: return 'Rejected';
+      case 4: return 'Cancelled';
+      default: return 'Pending';
+    }
+  }
 }
 
 class LeaveBalance {

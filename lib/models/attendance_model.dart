@@ -18,21 +18,55 @@ class AttendanceRecord {
   });
 
   factory AttendanceRecord.fromJson(Map<String, dynamic> j) {
-    final ci = j['checkIn'] != null ? DateTime.tryParse(j['checkIn']) : null;
-    final co = j['checkOut'] != null ? DateTime.tryParse(j['checkOut']) : null;
+    final dateStr = j['date'] ?? '';
+    final date = DateTime.tryParse(dateStr) ?? DateTime.now();
+
+    DateTime? combine(String? timeStr) {
+      if (timeStr == null || timeStr.isEmpty) return null;
+      try {
+        final parts = timeStr.split(':');
+        if (parts.length >= 2) {
+          final h = int.parse(parts[0]);
+          final m = int.parse(parts[1]);
+          final s = parts.length > 2 ? int.parse(parts[2].split('.')[0]) : 0;
+          return DateTime(date.year, date.month, date.day, h, m, s);
+        }
+      } catch (_) {}
+      return null;
+    }
+
+    final ci = combine(j['checkInTime'] ?? j['checkIn']);
+    final co = combine(j['checkOutTime'] ?? j['checkOut']);
+
     Duration? dur;
-    if (ci != null && co != null) {
+    if (j['totalHours'] != null) {
+      dur = Duration(minutes: ((j['totalHours'] as num) * 60).toInt());
+    } else if (ci != null && co != null) {
       dur = co.difference(ci);
     }
+
     return AttendanceRecord(
       id: j['id'] ?? '',
-      date: DateTime.tryParse(j['date'] ?? '') ?? DateTime.now(),
+      date: date,
       checkIn: ci,
       checkOut: co,
-      status: j['status'] ?? 'Unknown',
+      status: j['status'] is int ? _statusFromInt(j['status']) : (j['status'] ?? 'Unknown'),
       notes: j['notes'],
       duration: dur,
     );
+  }
+
+  static String _statusFromInt(int s) {
+    switch (s) {
+      case 1: return 'CheckedIn';
+      case 2: return 'CheckedOut';
+      case 3: return 'MissingCheckout';
+      case 4: return 'Absent';
+      case 5: return 'OnLeave';
+      case 6: return 'Holiday';
+      case 7: return 'WorkFromHome';
+      default: return 'Unknown';
+    }
   }
 
   bool get isCheckedIn => checkIn != null && checkOut == null;

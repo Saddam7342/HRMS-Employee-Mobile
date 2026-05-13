@@ -9,6 +9,7 @@ import '../providers/notification_provider.dart';
 import '../models/attendance_model.dart';
 import '../models/leave_model.dart';
 import 'notifications_screen.dart';
+import '../providers/navigation_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -331,54 +332,90 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuickActions(BuildContext ctx) {
+    final nav = ctx.read<NavigationProvider>();
     final actions = [
-      {'label': 'Apply Leave', 'icon': Icons.beach_access_rounded, 'color': const Color(0xFFF59E0B)},
-      {'label': 'Expenses', 'icon': Icons.receipt_long_rounded, 'color': const Color(0xFF3B82F6)},
-      {'label': 'Travel', 'icon': Icons.flight_rounded, 'color': const Color(0xFF06B6D4)},
-      {'label': 'Payslip', 'icon': Icons.account_balance_wallet_rounded, 'color': const Color(0xFF8B5CF6)},
+      {
+        'label': 'Apply Leave',
+        'icon': Icons.beach_access_rounded,
+        'color': const Color(0xFFF59E0B),
+        'onTap': () => nav.setIndex(2)
+      },
+      {
+        'label': 'Attendance',
+        'icon': Icons.timer_rounded,
+        'color': const Color(0xFF10B981),
+        'onTap': () => nav.setIndex(1)
+      },
+      {
+        'label': 'Expenses',
+        'icon': Icons.receipt_long_rounded,
+        'color': const Color(0xFF3B82F6),
+        'onTap': () {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            const SnackBar(content: Text('Expenses feature coming soon!')),
+          );
+        }
+      },
+      {
+        'label': 'Profile',
+        'icon': Icons.person_rounded,
+        'color': const Color(0xFF8B5CF6),
+        'onTap': () => nav.setIndex(3)
+      },
     ];
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Quick Actions',
               style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary)),
-          const SizedBox(height: 14),
-          Row(
-            children: actions.map((a) {
+          const SizedBox(height: 16),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.8,
+            ),
+            itemCount: actions.length,
+            itemBuilder: (context, index) {
+              final a = actions[index];
               final color = a['color'] as Color;
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Icon(a['icon'] as IconData, color: color, size: 26),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(a['label'] as String,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 11,
-                                color: AppTheme.textSecondary,
-                                fontWeight: FontWeight.w500)),
-                      ],
+              return GestureDetector(
+                onTap: a['onTap'] as VoidCallback,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
+                      ),
+                      child: Icon(a['icon'] as IconData, color: color, size: 28),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    Text(
+                      a['label'] as String,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               );
-            }).toList(),
+            },
           ),
         ],
       ),

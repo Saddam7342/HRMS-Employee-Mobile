@@ -7,6 +7,7 @@ import 'providers/leave_provider.dart';
 import 'providers/expense_provider.dart';
 import 'providers/travel_provider.dart';
 import 'providers/notification_provider.dart';
+import 'providers/navigation_provider.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
@@ -20,6 +21,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ExpenseProvider()),
         ChangeNotifierProvider(create: (_) => TravelProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
       ],
       child: const HRMSApp(),
     ),

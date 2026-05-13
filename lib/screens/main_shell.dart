@@ -10,6 +10,8 @@ import 'attendance_screen.dart';
 import 'leave_screen.dart';
 import 'profile_screen.dart';
 
+import '../providers/navigation_provider.dart';
+
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -18,7 +20,6 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
-  int _currentIndex = 0;
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -48,8 +49,9 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final nav = context.watch<NavigationProvider>();
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
+      body: IndexedStack(index: nav.currentIndex, children: _screens),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -80,9 +82,10 @@ class _MainShellState extends State<MainShell> {
   }
 
   Widget _navItem(int idx, IconData activeIcon, IconData inactiveIcon, String label) {
-    final isSelected = _currentIndex == idx;
+    final nav = context.read<NavigationProvider>();
+    final isSelected = nav.currentIndex == idx;
     return GestureDetector(
-      onTap: () => setState(() => _currentIndex = idx),
+      onTap: () => nav.setIndex(idx),
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
