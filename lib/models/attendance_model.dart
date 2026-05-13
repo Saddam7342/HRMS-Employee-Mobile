@@ -18,6 +18,7 @@ class AttendanceRecord {
   });
 
   factory AttendanceRecord.fromJson(Map<String, dynamic> j) {
+    final dateStr = j['date'] ?? '';
     final date = DateTime.tryParse(dateStr)?.toLocal() ?? DateTime.now();
 
     DateTime? combine(String? timeStr) {

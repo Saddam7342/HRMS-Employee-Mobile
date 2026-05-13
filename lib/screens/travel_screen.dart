@@ -24,7 +24,7 @@ class _TravelScreenState extends State<TravelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.bgLight,
       body: CustomScrollView(
         slivers: [
           _buildAppBar(),
