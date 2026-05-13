@@ -18,8 +18,7 @@ class AttendanceRecord {
   });
 
   factory AttendanceRecord.fromJson(Map<String, dynamic> j) {
-    final dateStr = j['date'] ?? '';
-    final date = DateTime.tryParse(dateStr) ?? DateTime.now();
+    final date = DateTime.tryParse(dateStr)?.toLocal() ?? DateTime.now();
 
     DateTime? combine(String? timeStr) {
       if (timeStr == null || timeStr.isEmpty) return null;
@@ -29,7 +28,7 @@ class AttendanceRecord {
           final h = int.parse(parts[0]);
           final m = int.parse(parts[1]);
           final s = parts.length > 2 ? int.parse(parts[2].split('.')[0]) : 0;
-          return DateTime(date.year, date.month, date.day, h, m, s);
+          return DateTime(date.year, date.month, date.day, h, m, s).toLocal();
         }
       } catch (_) {}
       return null;

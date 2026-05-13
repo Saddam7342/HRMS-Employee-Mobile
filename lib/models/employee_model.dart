@@ -44,7 +44,7 @@ class EmployeeProfile {
         designation: j['designation'] ?? j['jobTitle'],
         profileImageUrl: j['profileImageUrl'] ?? j['profilePictureUrl'],
         employeeCode: j['employeeCode'] ?? j['employeeId'],
-        joinDate: j['joinDate'] != null ? DateTime.tryParse(j['joinDate']) : null,
+        joinDate: j['joinDate'] != null ? DateTime.tryParse(j['joinDate'])?.toLocal() : null,
         isActive: j['isActive'] ?? true,
       );
 }

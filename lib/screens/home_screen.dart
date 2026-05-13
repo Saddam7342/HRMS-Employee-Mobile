@@ -10,6 +10,8 @@ import '../models/attendance_model.dart';
 import '../models/leave_model.dart';
 import 'notifications_screen.dart';
 import '../providers/navigation_provider.dart';
+import 'expense_screen.dart';
+import 'travel_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,10 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: RefreshIndicator(
         color: AppTheme.primary,
         onRefresh: () async {
-          await Future.wait([
-            context.read<AttendanceProvider>().fetchToday(),
-            context.read<LeaveProvider>().fetchBalances(),
-          ]);
+          await Future.wait([context.read<AttendanceProvider>().fetchToday(), context.read<LeaveProvider>().fetchBalances()]);
         },
         child: CustomScrollView(
           slivers: [
@@ -65,7 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHeader(BuildContext ctx, String name, int unread) {
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    final greeting = hour < 12
+        ? 'Good Morning'
+        : hour < 17
+        ? 'Good Afternoon'
+        : 'Good Evening';
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 28),
       decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
@@ -75,32 +78,28 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$greeting 👋',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                Text('$greeting 👋', style: const TextStyle(color: Colors.white70, fontSize: 14)),
                 const SizedBox(height: 4),
-                Text(name,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700)),
+                Text(
+                  name,
+                  style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 4),
-                Text(DateFormat('EEEE, dd MMMM yyyy').format(DateTime.now()),
-                    style: const TextStyle(color: Colors.white60, fontSize: 12)),
+                Text(
+                  DateFormat('EEEE, dd MMMM yyyy').format(DateTime.now()),
+                  style: const TextStyle(color: Colors.white60, fontSize: 12),
+                ),
               ],
             ),
           ),
           Stack(
             children: [
               GestureDetector(
-                onTap: () => Navigator.push(ctx,
-                    MaterialPageRoute(builder: (_) => const NotificationsScreen())),
+                onTap: () => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
                 child: Container(
                   width: 46,
                   height: 46,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(14)),
                   child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
                 ),
               ),
@@ -110,10 +109,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 0,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                        color: AppTheme.danger, shape: BoxShape.circle),
-                    child: Text('$unread',
-                        style: const TextStyle(color: Colors.white, fontSize: 10)),
+                    decoration: const BoxDecoration(color: AppTheme.danger, shape: BoxShape.circle),
+                    child: Text('$unread', style: const TextStyle(color: Colors.white, fontSize: 10)),
                   ),
                 ),
             ],
@@ -123,8 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAttendanceCard(
-      BuildContext ctx, AttendanceRecord? today, AttendanceProvider att) {
+  Widget _buildAttendanceCard(BuildContext ctx, AttendanceRecord? today, AttendanceProvider att) {
     final isIn = today?.isCheckedIn ?? false;
     final isDone = today?.isCompleted ?? false;
     final fmt = DateFormat('hh:mm a');
@@ -137,16 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: isDone
               ? AppTheme.successGradient
               : isIn
-                  ? const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF4F46E5)])
-                  : AppTheme.cardGradient,
+              ? const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF4F46E5)])
+              : AppTheme.cardGradient,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primary.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 8))],
         ),
         child: Column(
           children: [
@@ -156,19 +146,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Today's Attendance",
-                          style: TextStyle(color: Colors.white70, fontSize: 12)),
+                      const Text("Today's Attendance", style: TextStyle(color: Colors.white70, fontSize: 12)),
                       const SizedBox(height: 4),
                       Text(
                         isDone
                             ? 'Work Complete'
                             : isIn
-                                ? 'You\'re Clocked In'
-                                : 'Not Clocked In',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
+                            ? 'You\'re Clocked In'
+                            : 'Not Clocked In',
+                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
@@ -176,16 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   width: 52,
                   height: 52,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), shape: BoxShape.circle),
                   child: Icon(
                     isDone
                         ? Icons.check_circle_outline
                         : isIn
-                            ? Icons.timer
-                            : Icons.timer_outlined,
+                        ? Icons.timer
+                        : Icons.timer_outlined,
                     color: Colors.white,
                     size: 28,
                   ),
@@ -208,29 +191,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: att.isLoading
                     ? null
                     : () async {
-                        final err = isIn
-                            ? await att.checkOut()
-                            : await att.checkIn();
+                        final err = isIn ? await att.checkOut() : await att.checkIn();
                         if (err != null && ctx.mounted) {
-                          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-                            content: Text(err),
-                            backgroundColor: AppTheme.danger,
-                          ));
+                          ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(err), backgroundColor: AppTheme.danger));
                         }
                       },
                 child: Container(
                   width: double.infinity,
                   height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
                   alignment: Alignment.center,
                   child: att.isLoading
                       ? const SizedBox(
                           width: 22,
                           height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primary))
+                          child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primary),
+                        )
                       : Text(
                           isIn ? '  Clock Out' : '  Clock In',
                           style: TextStyle(
@@ -251,36 +227,39 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
         child: Column(
           children: [
             Text(label, style: const TextStyle(color: Colors.white60, fontSize: 10)),
             const SizedBox(height: 4),
-            Text(value,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
+            Text(
+              value,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatsRow(
-      BuildContext ctx, List<LeaveBalance> balances, AttendanceRecord? today) {
+  Widget _buildStatsRow(BuildContext ctx, List<LeaveBalance> balances, AttendanceRecord? today) {
     final totalRemaining = balances.fold<double>(0, (s, b) => s + b.remaining);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      child: Row(
-        children: [
-          _statCard('Leave Days', '${totalRemaining.toInt()}', Icons.event_note_rounded,
-              AppTheme.warning, 'Remaining'),
-          const SizedBox(width: 12),
-          _statCard('Status', today?.status ?? 'N/A', Icons.radio_button_checked,
-              today?.isCheckedIn == true ? AppTheme.accent : AppTheme.textMuted, 'Today'),
-        ],
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            _statCard('Leave Days', '${totalRemaining.toInt()}', Icons.event_note_rounded, AppTheme.warning, 'Remaining'),
+            const SizedBox(width: 12),
+            _statCard(
+              'Status',
+              today?.status ?? 'N/A',
+              Icons.radio_button_checked,
+              today?.isCheckedIn == true ? AppTheme.accent : AppTheme.textMuted,
+              'Today',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -292,21 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 2))
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 2))],
         ),
         child: Row(
           children: [
             Container(
               width: 42,
               height: 42,
-              decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
               child: Icon(icon, color: color, size: 22),
             ),
             const SizedBox(width: 12),
@@ -314,14 +286,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(value,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary)),
-                  Text(sub,
-                      style: const TextStyle(
-                          fontSize: 11, color: AppTheme.textSecondary)),
+                  Text(
+                    value,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                  ),
+                  Text(sub, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                 ],
               ),
             ),
@@ -338,30 +307,22 @@ class _HomeScreenState extends State<HomeScreen> {
         'label': 'Apply Leave',
         'icon': Icons.beach_access_rounded,
         'color': const Color(0xFFF59E0B),
-        'onTap': () => nav.setIndex(2)
+        'onTap': () => nav.setIndex(2),
       },
-      {
-        'label': 'Attendance',
-        'icon': Icons.timer_rounded,
-        'color': const Color(0xFF10B981),
-        'onTap': () => nav.setIndex(1)
-      },
+      {'label': 'Attendance', 'icon': Icons.timer_rounded, 'color': const Color(0xFF10B981), 'onTap': () => nav.setIndex(1)},
       {
         'label': 'Expenses',
         'icon': Icons.receipt_long_rounded,
         'color': const Color(0xFF3B82F6),
-        'onTap': () {
-          ScaffoldMessenger.of(ctx).showSnackBar(
-            const SnackBar(content: Text('Expenses feature coming soon!')),
-          );
-        }
+        'onTap': () => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ExpenseScreen())),
       },
       {
-        'label': 'Profile',
-        'icon': Icons.person_rounded,
-        'color': const Color(0xFF8B5CF6),
-        'onTap': () => nav.setIndex(3)
+        'label': 'Travel',
+        'icon': Icons.flight_takeoff_rounded,
+        'color': const Color(0xFFEC4899),
+        'onTap': () => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const TravelScreen())),
       },
+      {'label': 'Profile', 'icon': Icons.person_rounded, 'color': const Color(0xFF8B5CF6), 'onTap': () => nav.setIndex(3)},
     ];
 
     return Padding(
@@ -369,11 +330,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Quick Actions',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary)),
+          const Text(
+            'Quick Actions',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+          ),
           const SizedBox(height: 16),
           GridView.builder(
             shrinkWrap: true,
@@ -406,11 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       a['label'] as String,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -429,11 +385,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Leave Balances',
-              style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary)),
+          const Text(
+            'Leave Balances',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+          ),
           const SizedBox(height: 14),
           SizedBox(
             height: 110,
@@ -453,10 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.04),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2))
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
                     ],
                   ),
                   child: Column(
@@ -465,23 +417,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(b.remaining.toInt().toString(),
-                              style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w800,
-                                  color: c)),
-                          Text('/${b.total.toInt()}',
-                              style: const TextStyle(
-                                  fontSize: 12, color: AppTheme.textMuted)),
+                          Text(
+                            b.remaining.toInt().toString(),
+                            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: c),
+                          ),
+                          Text('/${b.total.toInt()}', style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(b.leaveType,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: AppTheme.textSecondary)),
+                      Text(
+                        b.leaveType,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                      ),
                       const SizedBox(height: 8),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),

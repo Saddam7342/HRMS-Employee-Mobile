@@ -28,7 +28,7 @@ class ExpenseClaim {
         amount: ((j['amount'] ?? 0) as num).toDouble(),
         currency: j['currency'] ?? 'PKR',
         status: j['status'] ?? 'Pending',
-        claimDate: DateTime.tryParse(j['claimDate'] ?? j['createdAt'] ?? '') ?? DateTime.now(),
+        claimDate: DateTime.tryParse(j['claimDate'] ?? j['createdAt'] ?? '')?.toLocal() ?? DateTime.now(),
         description: j['description'],
         receiptUrl: j['receiptUrl'],
       );

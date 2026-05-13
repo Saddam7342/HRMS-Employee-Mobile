@@ -23,13 +23,13 @@ class TravelRequest {
         id: j['id'] ?? '',
         destination: j['destination'] ?? '',
         purpose: j['purpose'] ?? '',
-        fromDate: DateTime.tryParse(j['fromDate'] ?? '') ?? DateTime.now(),
-        toDate: DateTime.tryParse(j['toDate'] ?? '') ?? DateTime.now(),
+        fromDate: DateTime.tryParse(j['fromDate'] ?? '')?.toLocal() ?? DateTime.now(),
+        toDate: DateTime.tryParse(j['toDate'] ?? '')?.toLocal() ?? DateTime.now(),
         status: j['status'] ?? 'Pending',
         estimatedBudget: j['estimatedBudget'] != null
             ? ((j['estimatedBudget']) as num).toDouble()
             : null,
-        createdAt: j['createdAt'] != null ? DateTime.tryParse(j['createdAt']) : null,
+        createdAt: j['createdAt'] != null ? DateTime.tryParse(j['createdAt'])?.toLocal() : null,
       );
 
   int get tripDays => toDate.difference(fromDate).inDays + 1;

@@ -58,7 +58,7 @@ class ExpenseProvider with ChangeNotifier {
         'title': title,
         'categoryId': categoryId,
         'amount': amount,
-        'claimDate': claimDate.toIso8601String(),
+        'claimDate': claimDate.toUtc().toIso8601String(),
         'description': description,
       });
       await fetchMyClaims();

@@ -42,8 +42,8 @@ class TravelProvider with ChangeNotifier {
       await _api.post(ApiConstants.createTravel, data: {
         'destination': destination,
         'purpose': purpose,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
+        'fromDate': fromDate.toUtc().toIso8601String(),
+        'toDate': toDate.toUtc().toIso8601String(),
         'estimatedBudget': estimatedBudget,
       });
       await fetchMyRequests();

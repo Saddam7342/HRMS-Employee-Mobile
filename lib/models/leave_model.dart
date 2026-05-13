@@ -22,12 +22,12 @@ class LeaveRequest {
   factory LeaveRequest.fromJson(Map<String, dynamic> j) => LeaveRequest(
         id: j['id'] ?? '',
         leaveType: j['leaveTypeName'] ?? j['leaveType'] ?? '',
-        startDate: DateTime.tryParse(j['startDate'] ?? '') ?? DateTime.now(),
-        endDate: DateTime.tryParse(j['endDate'] ?? '') ?? DateTime.now(),
+        startDate: DateTime.tryParse(j['startDate'] ?? '')?.toLocal() ?? DateTime.now(),
+        endDate: DateTime.tryParse(j['endDate'] ?? '')?.toLocal() ?? DateTime.now(),
         days: ((j['totalDays'] ?? j['days'] ?? 1) as num).toDouble(),
         status: j['status'] is int ? _statusFromInt(j['status']) : (j['status'] ?? 'Pending'),
         reason: j['reason'],
-        appliedAt: j['appliedAt'] != null ? DateTime.tryParse(j['appliedAt']) : null,
+        appliedAt: j['appliedAt'] != null ? DateTime.tryParse(j['appliedAt'])?.toLocal() : null,
       );
 
   static String _statusFromInt(int s) {

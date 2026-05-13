@@ -56,8 +56,8 @@ class LeaveProvider with ChangeNotifier {
     try {
       await _api.post(ApiConstants.applyLeave, data: {
         'leaveTypeId': leaveTypeId,
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
+        'startDate': startDate.toUtc().toIso8601String(),
+        'endDate': endDate.toUtc().toIso8601String(),
         'reason': reason,
       });
       await fetchMyLeaves();
