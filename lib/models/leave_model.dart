@@ -25,7 +25,9 @@ class LeaveRequest {
         startDate: DateTime.tryParse(j['startDate'] ?? '')?.toLocal() ?? DateTime.now(),
         endDate: DateTime.tryParse(j['endDate'] ?? '')?.toLocal() ?? DateTime.now(),
         days: ((j['totalDays'] ?? j['days'] ?? 1) as num).toDouble(),
-        status: j['status'] is int ? _statusFromInt(j['status']) : (j['status'] ?? 'Pending'),
+        status: j['status'] is int
+            ? _statusFromInt(j['status'] as int)
+            : (j['status']?.toString() ?? 'Pending'),
         reason: j['reason'],
         appliedAt: j['appliedAt'] != null ? DateTime.tryParse(j['appliedAt'])?.toLocal() : null,
       );
@@ -62,5 +64,33 @@ class LeaveBalance {
         total: ((j['totalDays'] ?? j['total'] ?? 0) as num).toDouble(),
         used: ((j['usedDays'] ?? j['used'] ?? 0) as num).toDouble(),
         remaining: ((j['remainingDays'] ?? j['remaining'] ?? 0) as num).toDouble(),
+      );
+}
+
+/// Eligible leave type from `GET /leaves/types`.
+class LeaveTypeOption {
+  final String id;
+  final String name;
+  final String code;
+  final int defaultDays;
+  final bool isGenderSpecific;
+  final String? applicableGender;
+
+  LeaveTypeOption({
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.defaultDays,
+    required this.isGenderSpecific,
+    this.applicableGender,
+  });
+
+  factory LeaveTypeOption.fromJson(Map<String, dynamic> j) => LeaveTypeOption(
+        id: j['id']?.toString() ?? '',
+        name: j['name']?.toString() ?? '',
+        code: j['code']?.toString() ?? '',
+        defaultDays: (j['defaultDays'] as num?)?.toInt() ?? 0,
+        isGenderSpecific: j['isGenderSpecific'] == true,
+        applicableGender: j['applicableGender']?.toString(),
       );
 }

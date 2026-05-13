@@ -39,16 +39,23 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _initApp() async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
-    await context.read<AuthProvider>().tryAutoLogin();
-    if (!mounted) return;
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (!mounted) return;
     final auth = context.read<AuthProvider>();
+    final route = await auth.resolveStartupRoute();
+    if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+
+    final Widget next = switch (route) {
+      AuthStartupRoute.main => const MainShell(),
+      AuthStartupRoute.login => const LoginScreen(),
+      AuthStartupRoute.biometricUnlock =>
+        const LoginScreen(unlockWithBiometric: true),
+    };
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) =>
-            auth.isAuthenticated ? const MainShell() : const LoginScreen(),
+        pageBuilder: (_, __, ___) => next,
         transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (_, anim, __, child) =>
             FadeTransition(opacity: anim, child: child),

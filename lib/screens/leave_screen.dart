@@ -17,8 +17,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LeaveProvider>().fetchMyLeaves();
-      context.read<LeaveProvider>().fetchBalances();
+      context.read<LeaveProvider>().reloadAllLeaveData();
     });
   }
 
@@ -40,8 +39,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
       body: RefreshIndicator(
         color: AppTheme.primary,
         onRefresh: () async {
-          await leave.fetchMyLeaves();
-          await leave.fetchBalances();
+          await leave.reloadAllLeaveData();
         },
         child: CustomScrollView(
           slivers: [
@@ -232,19 +230,28 @@ class _LeaveScreenState extends State<LeaveScreen> {
     );
   }
 
-  void _showApplyLeaveModal(BuildContext context) {
+  Future<void> _showApplyLeaveModal(BuildContext context) async {
     final leaveProvider = context.read<LeaveProvider>();
-    
-    if (leaveProvider.balances.isEmpty) {
+    await leaveProvider.reloadAllLeaveData();
+    if (!context.mounted) return;
+
+    final applicable = leaveProvider.typesWithAvailableBalance;
+    if (applicable.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No leave types available. Please contact HR.')),
+        SnackBar(
+          content: Text(
+            leaveProvider.leaveTypes.isEmpty
+                ? 'Could not load leave types. Check your connection and try again.'
+                : 'No leave balance available for any leave type. Contact HR.',
+          ),
+        ),
       );
       return;
     }
 
-    String selectedTypeId = leaveProvider.balances.first.leaveTypeId;
+    String selectedTypeId = applicable.first.id;
     DateTime startDate = DateTime.now();
-    DateTime endDate = DateTime.now().add(const Duration(days: 1));
+    DateTime endDate = DateTime.now();
     final reasonController = TextEditingController();
 
     showModalBottomSheet(
@@ -305,16 +312,26 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     value: selectedTypeId,
                     isExpanded: true,
                     icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.textMuted),
-                    items: leaveProvider.balances.map((b) => DropdownMenuItem(
-                      value: b.leaveTypeId, 
-                      child: Row(
-                        children: [
-                          Text(b.leaveType, style: const TextStyle(fontWeight: FontWeight.w600)),
-                          const Spacer(),
-                          Text('${b.remaining.toInt()} left', style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
-                        ],
-                      )
-                    )).toList(),
+                    items: applicable.map((t) {
+                      final rem = leaveProvider.remainingForType(t.id)?.toInt() ?? 0;
+                      return DropdownMenuItem<String>(
+                        value: t.id,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                t.name,
+                                style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Text(
+                              '$rem left',
+                              style: const TextStyle(fontSize: 12, color: AppTheme.textMuted),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                     onChanged: (val) => setModalState(() => selectedTypeId = val!),
                   ),
                 ),
