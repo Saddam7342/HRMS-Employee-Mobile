@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../core/api_service.dart';
 import '../core/constants.dart';
 import '../models/notification_model.dart';
@@ -44,7 +43,7 @@ class NotificationProvider with ChangeNotifier {
     try {
       await _api.put(ApiConstants.markAllRead);
       _unreadCount = 0;
-      for (var n in _notifications) {
+      for (var _ in _notifications) {
         // local update
       }
       await fetchNotifications();

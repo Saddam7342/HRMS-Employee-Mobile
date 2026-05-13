@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                                     profile!.profileImageUrl!,
                                     width: 100,
                                     height: 100,
-                                    fit: BoxImage.cover,
+                                    fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) => _buildInitialsAvatar(profile),
                                   ),
                                 )

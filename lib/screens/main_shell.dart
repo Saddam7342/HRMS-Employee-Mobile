@@ -4,7 +4,6 @@ import '../core/theme.dart';
 import '../providers/attendance_provider.dart';
 import '../providers/leave_provider.dart';
 import '../providers/expense_provider.dart';
-import '../providers/travel_provider.dart';
 import '../providers/notification_provider.dart';
 import 'home_screen.dart';
 import 'attendance_screen.dart';
@@ -39,8 +38,6 @@ class _MainShellState extends State<MainShell> {
     final lv = context.read<LeaveProvider>();
     final notif = context.read<NotificationProvider>();
     final exp = context.read<ExpenseProvider>();
-    final travel = context.read<TravelProvider>();
-
     await Future.wait([
       att.fetchToday(),
       lv.fetchBalances(),
@@ -51,7 +48,6 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
-    final unread = context.watch<NotificationProvider>().unreadCount;
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: Container(
