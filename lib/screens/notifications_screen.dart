@@ -58,7 +58,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(color: AppTheme.primary.withOpacity(0.05), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppTheme.primary.withValues(alpha: 0.05), shape: BoxShape.circle),
             child: const Icon(Icons.notifications_off_outlined, size: 64, color: AppTheme.textMuted),
           ),
           const SizedBox(height: 24),
@@ -74,10 +74,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: notification.isRead ? Colors.white.withOpacity(0.7) : Colors.white,
+        color: notification.isRead ? Colors.white.withValues(alpha: 0.7) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: ListTile(
@@ -85,7 +85,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: _getNotificationColor(notification.type).withOpacity(0.1),
+            color: _getNotificationColor(notification.type).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(_getNotificationIcon(notification.type), color: _getNotificationColor(notification.type), size: 24),

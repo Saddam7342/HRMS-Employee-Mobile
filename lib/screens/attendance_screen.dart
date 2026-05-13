@@ -98,14 +98,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           children: [
             Text(value, style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            Text(label, style: TextStyle(color: textColor.withOpacity(0.8), fontSize: 10)),
+            Text(label, style: TextStyle(color: textColor.withValues(alpha: 0.8), fontSize: 10)),
           ],
         ),
       ),
@@ -124,7 +124,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 4))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -195,7 +195,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     Color c = status == 'Completed' ? AppTheme.accent : status == 'Active' ? AppTheme.primary : AppTheme.textMuted;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: c.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: c.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
       child: Text(status, style: TextStyle(color: c, fontSize: 12, fontWeight: FontWeight.w600)),
     );
   }
@@ -210,14 +210,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
           Container(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
             child: Icon(Icons.calendar_today_rounded, color: statusColor, size: 20),
           ),
           const SizedBox(width: 14),
@@ -239,7 +239,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
                 child: Text(r.status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.w600)),
               ),
               const SizedBox(height: 4),

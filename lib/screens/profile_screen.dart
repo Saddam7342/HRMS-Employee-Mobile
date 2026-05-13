@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     Text(
                       profile?.designation ?? 'Role',
-                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 14),
                     ),
                     const SizedBox(height: 8),
                     Container(
@@ -137,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Column(children: children),
@@ -148,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: AppTheme.primary.withOpacity(0.05), borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(color: AppTheme.primary.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10)),
         child: Icon(icon, size: 20, color: AppTheme.primary),
       ),
       title: Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
@@ -160,7 +160,7 @@ class ProfileScreen extends StatelessWidget {
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10)),
         child: Icon(icon, size: 20, color: color),
       ),
       title: Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: color)),

@@ -97,7 +97,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
-                BoxShadow(color: color.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+                BoxShadow(color: color.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
               ],
             ),
             child: Column(
@@ -110,7 +110,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                   '${b.remaining.toInt()}',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: color),
                 ),
-                Text('Days Left', style: TextStyle(fontSize: 10, color: color.withOpacity(0.7))),
+                Text('Days Left', style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7))),
               ],
             ),
           );
@@ -127,7 +127,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 2)),
         ],
       ),
       child: ListTile(
@@ -190,7 +190,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -237,7 +237,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                 const Text('Leave Type', style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: selectedType,
+                  initialValue: selectedType,
                   decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
                   items: leaveProvider.balances.map((b) => DropdownMenuItem(value: b.leaveType, child: Text(b.leaveType))).toList(),
                   onChanged: (val) => setModalState(() => selectedType = val!),

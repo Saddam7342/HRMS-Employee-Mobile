@@ -80,9 +80,9 @@ class _SplashScreenState extends State<SplashScreen>
                       width: 110,
                       height: 110,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(32),
-                        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1.5),
                       ),
                       child: const Icon(
                         Icons.business_center_rounded,
@@ -113,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
                           'Human Resource Management',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             letterSpacing: 1.2,
                           ),
                         ),
@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen>
                     height: 36,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                   ),
                 ),

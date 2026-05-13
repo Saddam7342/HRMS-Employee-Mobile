@@ -10,7 +10,7 @@ class ApiService {
   }
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
 
   final Dio _dio = Dio(BaseOptions(

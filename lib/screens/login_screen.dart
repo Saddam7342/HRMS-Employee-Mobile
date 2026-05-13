@@ -99,9 +99,9 @@ class _LoginScreenState extends State<LoginScreen>
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(22),
-                          border: Border.all(color: Colors.white.withOpacity(0.4)),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
                         ),
                         child: const Icon(Icons.business_center_rounded,
                             size: 44, color: Colors.white),
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen>
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primary.withOpacity(0.08),
+                                color: AppTheme.primary.withValues(alpha: 0.08),
                                 blurRadius: 30,
                                 offset: const Offset(0, 8),
                               ),

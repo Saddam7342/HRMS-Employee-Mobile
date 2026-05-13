@@ -10,7 +10,7 @@ import '../models/employee_model.dart';
 class AuthProvider with ChangeNotifier {
   final ApiService _api = ApiService();
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
 
   UserModel? _user;
