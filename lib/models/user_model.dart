@@ -1,41 +1,28 @@
+// User Model
 class UserModel {
   final String id;
-  final String firstName;
-  final String lastName;
   final String email;
   final String role;
-  final String? profilePictureUrl;
+  final bool isActive;
 
   UserModel({
     required this.id,
-    required this.firstName,
-    required this.lastName,
     required this.email,
     required this.role,
-    this.profilePictureUrl,
+    required this.isActive,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      role: json['role'],
-      profilePictureUrl: json['profilePictureUrl'],
-    );
-  }
+  factory UserModel.fromJson(Map<String, dynamic> j) => UserModel(
+        id: j['id'] ?? '',
+        email: j['email'] ?? '',
+        role: j['role'] ?? 'Employee',
+        isActive: j['isActive'] ?? true,
+      );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'role': role,
-      'profilePictureUrl': profilePictureUrl,
-    };
-  }
-
-  String get fullName => '$firstName $lastName';
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'email': email,
+        'role': role,
+        'isActive': isActive,
+      };
 }

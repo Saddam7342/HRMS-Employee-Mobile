@@ -1,54 +1,53 @@
-class LeaveRequestModel {
+class LeaveRequest {
   final String id;
   final String leaveType;
   final DateTime startDate;
   final DateTime endDate;
+  final double days;
   final String status;
   final String? reason;
-  final double days;
+  final DateTime? appliedAt;
 
-  LeaveRequestModel({
+  LeaveRequest({
     required this.id,
     required this.leaveType,
     required this.startDate,
     required this.endDate,
+    required this.days,
     required this.status,
     this.reason,
-    required this.days,
+    this.appliedAt,
   });
 
-  factory LeaveRequestModel.fromJson(Map<String, dynamic> json) {
-    return LeaveRequestModel(
-      id: json['id'],
-      leaveType: json['leaveType'],
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      status: json['status'],
-      reason: json['reason'],
-      days: (json['days'] as num).toDouble(),
-    );
-  }
+  factory LeaveRequest.fromJson(Map<String, dynamic> j) => LeaveRequest(
+        id: j['id'] ?? '',
+        leaveType: j['leaveType'] ?? '',
+        startDate: DateTime.tryParse(j['startDate'] ?? '') ?? DateTime.now(),
+        endDate: DateTime.tryParse(j['endDate'] ?? '') ?? DateTime.now(),
+        days: ((j['days'] ?? j['totalDays'] ?? 1) as num).toDouble(),
+        status: j['status'] ?? 'Pending',
+        reason: j['reason'],
+        appliedAt: j['appliedAt'] != null ? DateTime.tryParse(j['appliedAt']) : null,
+      );
 }
 
-class LeaveBalanceModel {
+class LeaveBalance {
   final String leaveType;
   final double total;
   final double used;
   final double remaining;
 
-  LeaveBalanceModel({
+  LeaveBalance({
     required this.leaveType,
     required this.total,
     required this.used,
     required this.remaining,
   });
 
-  factory LeaveBalanceModel.fromJson(Map<String, dynamic> json) {
-    return LeaveBalanceModel(
-      leaveType: json['leaveType'],
-      total: (json['total'] as num).toDouble(),
-      used: (json['used'] as num).toDouble(),
-      remaining: (json['remaining'] as num).toDouble(),
-    );
-  }
+  factory LeaveBalance.fromJson(Map<String, dynamic> j) => LeaveBalance(
+        leaveType: j['leaveType'] ?? '',
+        total: ((j['total'] ?? j['totalDays'] ?? 0) as num).toDouble(),
+        used: ((j['used'] ?? j['usedDays'] ?? 0) as num).toDouble(),
+        remaining: ((j['remaining'] ?? j['remainingDays'] ?? 0) as num).toDouble(),
+      );
 }
